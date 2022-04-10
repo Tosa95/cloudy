@@ -1,0 +1,3 @@
+[submodule "embedded_lib"]
+    path = lib
+    url = https://Tosa95@bitbucket.org/Tosa95/embedded_lib.git

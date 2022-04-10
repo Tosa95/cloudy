@@ -1,0 +1,147 @@
+name: Camera
+settings_location: src/camera/camera_settings.h
+rest_location: src/webserver/handlers/camera_settings.h
+requirements:
+  - stdint.h
+  - ../../lib/time/types.h
+settings_sets:
+  
+  - name: ImgProcessingSettings
+    uri: /api/camera/img_processing_settings
+    backend_location: settings.imgProcessing
+    rest_json_max_size: 10000
+    fields:
+      - name: step
+        displayed_name: Step
+        backend_type: uint8_t
+        frontend_type: int
+        default: 2
+      - name: cellSize
+        displayed_name: Cell size
+        backend_type: uint8_t
+        frontend_type: int
+        default: 8
+      - name: pixelMovementThreshold
+        displayed_name: Pixel movement threshold
+        backend_type: uint8_t
+        frontend_type: int
+        default: 40
+      - name: diffImgGain
+        displayed_name: Difference image gain
+        backend_type: uint8_t
+        frontend_type: int
+        default: 2
+      - name: movementIndexPercentile
+        displayed_name: Movement index percentile
+        backend_type: float
+        frontend_type: float
+        default: 0.95
+      - name: compareEveryMillis
+        displayed_name: Compare every millis
+        backend_type: Time::millisecond_t
+        frontend_type: int
+        default: 100
+      - name: movementThreshold
+        displayed_name: Movement threshold
+        backend_type: float
+        frontend_type: float
+        default: 40
+      - name: uploadServer
+        displayed_name: Upload server url
+        backend_type: char
+        backend_cardinality: 100
+        frontend_type: string
+        default: http://192.168.1.82:8085
+      - name: experimentName
+        displayed_name: Experiment name
+        backend_type: char
+        backend_cardinality: 100
+        frontend_type: string
+        default: "exp"
+      - name: uploadImgs
+        displayed_name: Upload images
+        backend_type: bool
+        frontend_type: boolean
+        default: false
+      - name: imgQueueSize
+        displayed_name: Image queue size
+        backend_type: size_t
+        frontend_type: int
+        default: 3
+      - name: backgroundHue
+        displayed_name: Background Hue
+        backend_type: int32_t
+        frontend_type: int
+        default: 200000
+      - name: backgroundSaturation
+        displayed_name: Background Saturation
+        backend_type: int32_t
+        frontend_type: int
+        default: 300
+      - name: backgroundDiffThreshold
+        displayed_name: Background Diff Threshold
+        backend_type: int32_t
+        frontend_type: int
+        default: 20000
+    post_set_instructions:
+      - saveSettings();
+
+  - name: MLSettings
+    uri: /api/camera/ml_settings
+    backend_location: settings.ml
+    rest_json_max_size: 5000
+    fields:
+      - name: maxClusters
+        displayed_name: Max Clusters
+        backend_type: uint16_t
+        frontend_type: int
+        default: 30
+      - name: minAverageDistFromCentroid
+        displayed_name: Min Average Dist From Centroid
+        backend_type: float
+        frontend_type: float
+        default: 0.1
+      - name: clusteringMaxIters
+        displayed_name: Clustering Max Iters
+        backend_type: int32_t
+        frontend_type: int
+        default: 20
+      - name: maxForegroundPointsToKeep
+        displayed_name: Max Background Points To Keep
+        backend_type: int32_t
+        frontend_type: int
+        default: 1000
+      - name: nnPersistence
+        displayed_name: Neural Network Persistence
+        backend_type: float
+        frontend_type: float
+        default: 0.8
+    post_set_instructions:
+      - saveSettings();
+
+  - name: CameraSettings
+    uri: /api/camera/settings
+    backend_location: settings.camera
+    rest_json_max_size: 5000
+    fields:
+      - name: resolution
+        displayed_name: Resolution
+        backend_type: uint8_t
+        frontend_type: int
+        default: 5
+        needs_reboot: true
+        choices:
+          - displayed_name: 240x176
+            value: 3
+          - displayed_name: 320x240
+            value: 5
+          - displayed_name: 480x320
+            value: 7
+      - name: enableFlash
+        displayed_name: Enable flash
+        backend_type: bool
+        frontend_type: boolean
+        default: false
+    post_set_instructions:
+      - saveSettings();
+      - Camera::setFromSettings(settings.camera);

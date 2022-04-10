@@ -1,0 +1,64 @@
+name: Dispenser
+settings_location: src/dispenser/dispenser_settings.h
+rest_location: src/webserver/handlers/dispenser_settings.h
+requirements:
+  - stdint.h
+  - ../../lib/time/types.h
+settings_sets:
+  - name: DispenserImgSettings
+    uri: /api/dispenser/dispenser_img_settings
+    backend_location: settings.dispenserImg
+    rest_json_max_size: 1000
+    fields:
+      - name: bowlCenterX
+        displayed_name: Bowl center x
+        backend_type: float
+        frontend_type: float
+        default: 0.5
+      - name: bowlCenterY
+        displayed_name: Bowl center y
+        backend_type: float
+        frontend_type: float
+        default: 0.8
+      - name: bowlRadius
+        displayed_name: Bowl radius
+        backend_type: float
+        frontend_type: float
+        default: 0.1
+      - name: step
+        displayed_name: Step
+        backend_type: uint8_t
+        frontend_type: int
+        default: 2
+      - name: valueTh
+        displayed_name: Value Threshold
+        backend_type: int32_t
+        frontend_type: int
+        default: 180
+      - name: target
+        displayed_name: Target
+        backend_type: float
+        frontend_type: float
+        default: 0.0
+      - name: croquettesPercPersistence
+        displayed_name: Croquettes Perc Persistence
+        backend_type: float
+        frontend_type: float
+        default: 0.7
+      - name: timeOn
+        displayed_name: Time On (ms)
+        backend_type: Time::millisecond_t
+        frontend_type: int
+        default: 100
+      - name: timeOff
+        displayed_name: Time Off (ms)
+        backend_type: Time::millisecond_t
+        frontend_type: int
+        default: 5000
+      - name: waitSinceLastMovement
+        displayed_name: Wait Since Last Movement
+        backend_type: Time::millisecond_t
+        frontend_type: int
+        default: 30000
+    post_set_instructions:
+      - saveSettings();
